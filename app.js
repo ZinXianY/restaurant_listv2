@@ -2,6 +2,8 @@
 const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
+const exphbs = require('express-handlebars')
+const restaurant = require('./models/restaurant')
 
 //設定連線到mongodb
 mongoose.connect('mongodb://localhost/restaurant-list', { useNewUrlParser: true, useUnifiedTopology: true })
@@ -19,9 +21,16 @@ db.once('open', () => {
   console.log('mongodb connected!')
 })
 
+//套入樣板引擎
+app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
+app.set('view engine', 'hbs')
+
+//設定靜態檔案
+app.use(express.static('public'))
+
 //設定首頁路由
 app.get('/', (req, res) => {
-  res.send('this is')
+  res.render('index')
 })
 
 
