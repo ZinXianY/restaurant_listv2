@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 const exphbs = require('express-handlebars')
 const bodyParser = require('body-parser')
 const Restaurant = require('./models/restaurant')
+const restaurantList = require('./models/seeds/restaurant.json').results
 
 //設定連線到mongodb
 mongoose.connect('mongodb://localhost/restaurant-list', { useNewUrlParser: true, useUnifiedTopology: true })
@@ -77,6 +78,15 @@ app.post('/restaurants/:id/edit', (req, res) => {
   const editRestaurant = req.body
   return Restaurant.findByIdAndUpdate(id, editRestaurant)
     .then(() => res.redirect(`/restaurants/${id}`))
+    .catch(error => console.log(error))
+})
+
+//設定 delete路由
+app.post('/restaurants/:id/delete', (req, res) => {
+  const id = req.params.id
+  return Restaurant.findById(id)
+    .then(restaurant => restaurant.remove())
+    .then(() => res.redirect('/'))
     .catch(error => console.log(error))
 })
 
