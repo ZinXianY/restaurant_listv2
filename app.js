@@ -3,6 +3,7 @@ const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
 const exphbs = require('express-handlebars')
+const bodyParser = require('body-parser')
 const restaurant = require('./models/restaurant')
 
 //設定連線到mongodb
@@ -28,11 +29,23 @@ app.set('view engine', 'hbs')
 //設定靜態檔案
 app.use(express.static('public'))
 
+//設定 body-parser
+app.use(bodyParser.urlencoded({ extended: true }))
+
 //設定首頁路由
 app.get('/', (req, res) => {
   restaurant.find() //取出 restaurant model 中的所有資料
     .lean() //把 Mongoose 的 model物件轉換成乾淨的 Javascript 資料陣列
     .then(restaurants => res.render('index', { restaurants })) //把資料傳送給index
+    .catch(error => console.log(error))
+})
+
+//設定show頁面路由
+app.get('/restaurants/:id', (req, res) => {
+  const id = req.params.id
+  return restaurant.findById(id)
+    .lean()
+    .then(restaurant => res.render('show', { restaurant }))
     .catch(error => console.log(error))
 })
 
