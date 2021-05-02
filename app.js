@@ -54,13 +54,33 @@ app.get('/new', (req, res) => {
   return res.render('new')
 })
 
-//設定新增餐廳路由
+//設定 Create 路由
 app.post('/restaurants', (req, res) => {
   const newRestaurant = req.body
   return Restaurant.create(newRestaurant)
     .then(() => res.redirect('/'))
     .catch(error => console.log(error))
 })
+
+//設定 edit 頁面路由
+app.get('/restaurants/:id/edit', (req, res) => {
+  const id = req.params.id
+  return Restaurant.findById(id)
+    .lean()
+    .then(restaurant => res.render('edit', { restaurant }))
+    .catch(error => console.log(error))
+})
+
+//設定 edit 餐廳資料
+app.post('/restaurants/:id/edit', (req, res) => {
+  const id = req.params.id
+  const editRestaurant = req.body
+  return Restaurant.findByIdAndUpdate(id, editRestaurant)
+    .then(() => res.redirect(`/restaurants/${id}`))
+    .catch(error => console.log(error))
+})
+
+
 //設定監聽器
 app.listen(3000, () => {
   console.log('App is running on http://localhost:3000')
