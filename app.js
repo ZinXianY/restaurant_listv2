@@ -90,6 +90,18 @@ app.post('/restaurants/:id/delete', (req, res) => {
     .catch(error => console.log(error))
 })
 
+//設定搜尋路由
+app.get('/search', (req, res) => {
+  const keyword = req.query.keyword
+  const restaurants = restaurantList.filter(item => {
+    return item.name.toLowerCase().includes(keyword.toLowerCase()) || item.category.includes(keyword)
+  })
+  if (restaurant.length === 0) {
+    res.render('找不到相關的資料')
+  } else {
+    res.render('index', { restaurants, keyword })
+  }
+})
 
 //設定監聽器
 app.listen(3000, () => {
