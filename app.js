@@ -5,7 +5,6 @@ const mongoose = require('mongoose')
 const exphbs = require('express-handlebars')
 const bodyParser = require('body-parser')
 const Restaurant = require('./models/restaurant')
-const restaurantList = require('./models/seeds/restaurant.json').results
 
 //設定連線到mongodb
 mongoose.connect('mongodb://localhost/restaurant-list', { useNewUrlParser: true, useUnifiedTopology: true })
@@ -93,14 +92,13 @@ app.post('/restaurants/:id/delete', (req, res) => {
 //設定搜尋路由
 app.get('/search', (req, res) => {
   const keyword = req.query.keyword
-  const restaurants = restaurantList.filter(item => {
-    return item.name.toLowerCase().includes(keyword.toLowerCase()) || item.category.includes(keyword)
+  const newRegExp = RegExp(keyword, 'i')
+  return Restaurant.find({
+    $or: [{ name: newRegExp }, { category: newRegExp }]
   })
-  if (restaurant.length === 0) {
-    res.render('找不到相關的資料')
-  } else {
-    res.render('index', { restaurants, keyword })
-  }
+    .lean()
+    .then(restaurants => res.render('index', { restaurants, keyword }))
+
 })
 
 //設定監聽器
