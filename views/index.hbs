@@ -38,8 +38,8 @@
               </span>
               <!-- edit and delete button -->
               <div class="d-flex justify-content-end mb-2">
-                <a href="/restaurants/{{this._id}}/edit" class="btn btn-primary" type="submit">編輯</a>
-                <form action="/restaurants/{{this._id}}/delete" method="POST" class="ml-2">
+                <a href="/restaurants/{{this._id}}/?_method=PUT" class="btn btn-primary" type="submit">編輯</a>
+                <form action="/restaurants/{{this._id}}/?_method=DELETE" method="POST" class="ml-2">
                   <button class="btn btn-danger" type="submit">刪除</button>
                 </form>
               </div>
