@@ -14,8 +14,6 @@ router.get('/:id', (req, res) => {
     .catch(error => console.log(error))
 })
 
-
-
 //設定 edit 頁面路由
 router.get('/:id/edit', (req, res) => {
   const id = req.params.id
