@@ -35,6 +35,17 @@ router.get('/search', (req, res) => {
   })
     .lean()
     .then(restaurants => res.render('index', { restaurants, keyword }))
+    .catch(error => console.log(error))
+})
+
+//設定sort路由
+router.get('/sort', (req, res) => {
+  const sort = req.query.sort
+  return Restaurant.find()
+    .lean()
+    .sort(sort)
+    .then(restaurants => res.render('index', { restaurants, sort }))
+    .catch(error => console.log(error))
 })
 
 //匯出路由器
