@@ -1,7 +1,7 @@
 # 我的餐廳清單
 使用Express結合MongoDB 打造出來的一個簡單餐廳搜尋網站。
 
-![image](/public/restaurant-listv3.PNG)
+![image](/public/restaurant-list.PNG)
 
 ## 產品功能
 * 使用者可以瀏覽餐廳的照片、店名、餐廳類別及評價。
