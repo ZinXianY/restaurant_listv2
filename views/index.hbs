@@ -21,11 +21,12 @@
         <div class="form-group">
           <select class="form-control btn btn-secondary" name="sort" id="sort" onchange="this.form.submit()">
             <option value="" disabled selected>排序方式 :</option>
-            <option value="name" {{#if this.sort}}{{/if}}>A-Z</option>
-            <option value="-name" {{#if this.sort}}{{/if}}>Z-A</option>
+            <option value="name" {{#if this.sort}}{{/if}}>店名(A-Z)</option>
+            <option value="-name" {{#if this.sort}}{{/if}}>店名(Z-A)</option>
             <option value="category" {{#if this.sort}}{{/if}}>類別</option>
             <option value="location" {{#if this.sort}}{{/if}}>地區</option>
-            <option value="rating" {{#if this.sort}}{{/if}}>評價</option>
+            <option value="rating" {{#if this.sort}}{{/if}}>評價(低到高)</option>
+            <option value="-rating" {{#if this.sort}}{{/if}}>評價(高到低)</option>
           </select>
         </div>
       </form>
