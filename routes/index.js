@@ -5,14 +5,20 @@ const router = express.Router()
 //引入 home 模組程式碼
 const home = require('./modules/home')
 
-//將網址符合 / 字串的request 導向 home 模組
-router.use('/', home)
-
 //引入 restaurants 模組程式碼
 const restaurants = require('./modules/restaurants')
 
+//引入 users 模組程式碼
+const users = require('./modules/users')
+
+//將網址符合 / 字串的request 導向 home 模組
+router.use('/', home)
+
 //將網址符合 /restaurants 字串的request 導向 restaurants 模組
 router.use('/restaurants', restaurants)
+
+//將網址符合 /users 字串的request 導向 users 模組
+router.use('/users', users)
 
 //匯出路由器
 module.exports = router
