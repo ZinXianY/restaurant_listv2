@@ -2,6 +2,9 @@
 const express = require('express')
 const router = express.Router()
 
+//引用 passport路由器
+const passport = require('passport')
+
 //引用 User model
 const User = require('../../models/user')
 
@@ -9,6 +12,12 @@ const User = require('../../models/user')
 router.get('/login', (req, res) => {
   res.render('login')
 })
+
+//驗證登入狀態
+router.post('/login', passport.authenticate('local', {
+  successRedirect: '/',
+  failureRedirect: '/users/login'
+}))
 
 //設定註冊路由
 router.get('/register', (req, res) => {
