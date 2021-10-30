@@ -27,18 +27,39 @@ router.get('/register', (req, res) => {
 //設定登出路由
 router.get('/logout', (req, res) => {
   req.logout()
+  req.flash('success_msg', '已成功登出。')
   res.redirect('/users/login')
 })
 
 //設定註冊功能
 router.post('/register', (req, res) => {
   const { name, email, password, confrimPassword } = req.body
+
+  //設定 Flash Message
+  const errors = []
+  if (!name || !email || !password || !confrimPassword) {
+    errors.push({ message: '所有欄位都是必填。' })
+  }
+  if (password !== confrimPassword) {
+    errors.push({ message: '密碼與確認密碼不相符!' })
+  }
+  if (errors.length) {
+    return res.render('register', {
+      errors,
+      name,
+      email,
+      password,
+      confrimPassword
+    })
+  }
+
   //檢查是否註冊過
   User.findOne({ email }).then(user => {
     //如註冊過退回原本畫面
     if (user) {
-      console.log('User already exists.')
-      res.render('register', {
+      errors.push({ message: '這個 Email 已被註冊過了。' })
+      return res.render('register', {
+        errors,
         name,
         email,
         password,
