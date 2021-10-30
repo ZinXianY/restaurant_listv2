@@ -1,5 +1,6 @@
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
+const bcrypt = require('bcryptjs')
 
 //載入 User model
 const User = require('../models/user')
@@ -17,10 +18,12 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, don
       if (!user) {
         return done(null, false, { message: 'That email is not registered!' })
       }
-      if (user.password !== password) {
-        return done(null, false, { message: 'Email or password incorrect.' })
-      }
-      return done(null, user)
+      return bcrypt.compare(password, user.password).then(isMatch => {
+        if (!isMatch) {
+          return done(null, false, { message: 'Email or password incorrect.' })
+        }
+        return done(null, user)
+      })
     })
     .catch(err => done(err, false))
 }))
