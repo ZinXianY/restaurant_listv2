@@ -5,6 +5,9 @@ const router = express.Router()
 //引用 passport路由器
 const passport = require('passport')
 
+//引用 bcrypt
+const bcrypt = require('bcryptjs')
+
 //引用 User model
 const User = require('../../models/user')
 
@@ -65,16 +68,18 @@ router.post('/register', (req, res) => {
         password,
         confrimPassword
       })
-    } else {
-      //沒註冊寫入資料庫
-      return User.create({
+    }
+    //沒註冊寫入資料庫並將密碼加鹽
+    return bcrypt
+      .genSalt(10)
+      .then(salt => bcrypt.hash(password, salt))
+      .then(hash => User.create({
         name,
         email,
-        password
-      })
-        .then(() => res.redirect('/'))
-        .catch(err => console.log(err))
-    }
+        password: hash
+      }))
+      .then(() => res.redirect('/'))
+      .catch(err => console.log(err))
   })
 })
 
