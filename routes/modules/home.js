@@ -7,9 +7,10 @@ const Restaurant = require('../../models/restaurant')
 
 //設定首頁路由
 router.get('/', (req, res) => {
-  Restaurant.find() //取出 restaurant model 中的所有資料
-    .lean() //把 Mongoose 的 model物件轉換成乾淨的 Javascript 資料陣列
-    .then(restaurants => res.render('index', { restaurants })) //把資料傳送給index
+  const userId = req.user._id
+  Restaurant.find({ userId })
+    .lean()
+    .then(restaurants => res.render('index', { restaurants }))
     .catch(error => console.log(error))
 })
 
@@ -20,8 +21,9 @@ router.get('/new', (req, res) => {
 
 //設定 Create 路由
 router.post('/', (req, res) => {
-  const newRestaurant = req.body
-  return Restaurant.create(newRestaurant)
+  const userId = req.user._id
+  const { name, name_en, category, image, location, phone, google_map, rating, description } = req.body
+  return Restaurant.create({ name, name_en, category, image, location, phone, google_map, rating, description, userId })
     .then(() => res.redirect('/'))
     .catch(error => console.log(error))
 })
@@ -29,9 +31,10 @@ router.post('/', (req, res) => {
 //設定搜尋路由
 router.get('/search', (req, res) => {
   const keyword = req.query.keyword
+  const userId = req.user._id
   const newRegExp = RegExp(keyword, 'i')
   return Restaurant.find({
-    $or: [{ name: newRegExp }, { category: newRegExp }]
+    $or: [{ name: newRegExp }, { category: newRegExp }], userId
   })
     .lean()
     .then(restaurants => res.render('index', { restaurants, keyword }))
@@ -40,8 +43,9 @@ router.get('/search', (req, res) => {
 
 //設定sort路由
 router.get('/sort', (req, res) => {
+  const userId = req.user._id
   const sort = req.query.sort
-  return Restaurant.find()
+  return Restaurant.find({ userId })
     .lean()
     .sort(sort)
     .then(restaurants => res.render('index', { restaurants, sort }))
